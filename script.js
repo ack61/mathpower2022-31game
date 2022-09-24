@@ -1,5 +1,6 @@
 const button = document.querySelector('input[type=button]');
 const input = document.querySelector('input[type=text]');
+const input_length = document.querySelector('#getLength');
 const table = document.querySelector('table');
 const paragraph = document.querySelector('p');
 
@@ -15,7 +16,7 @@ function updateButton() {
   S[0] = 0;
   add(0, 0);
 
-  for(let i = 1; i < 200; i++){
+  for(let i = 1; i < input_length.value; i++){
     let exist = [];
     for(let j = 0; j < G.length; j++){
       let next = Math.max(0, i - G[j]);
