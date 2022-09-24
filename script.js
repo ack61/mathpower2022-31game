@@ -7,6 +7,9 @@ button.addEventListener('click', updateButton);
 
 function updateButton() {
   console.log(input.value);
+  while(table.firstChild) {
+      table.removeChild(table.firstChild);
+  }
   let G = input.value.split(',').map(Number);
   let S = [];
   S[0] = 0;
