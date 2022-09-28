@@ -59,6 +59,9 @@ function calcPeriod() {
   let index = 1;
   let finish = false;
 
+  let period = 1;
+  let max_start_period = 1;
+
   while(true){
     let exist = [];
     for(let j = 0; j < G.length; j++){
@@ -91,10 +94,12 @@ function calcPeriod() {
           }
         }
         if(ok){
-          console.log("@" + (i - old));          
+//          console.log("@" + (i - old));          
           finish = true;
           tr = document.createElement('tr');
-          tr.textContent = i - old;
+          max_start_period = old;
+          period = i - old;
+          tr.textContent = "周期: " + (i - old);
           table.appendChild(tr);
           break;
         }
@@ -107,6 +112,38 @@ function calcPeriod() {
     }
     index++;
   }
+
+  let left = 0;
+  let right = max_start_period;
+  while(left != right){
+    let mid = Math.floor((left + right) / 2);
+    let isOk = true;
+    for(let i = 0; i < G[G.length-1]; i++){
+//      console.log(S[mid+i]);
+//      console.log(S[period+mid+i]);
+//      console.log(S[mid+i] == S[period+mid+i]);
+      if(S[mid+i] != S[period+mid+i]){
+        isOk = false;
+        break;
+      }
+    }
+//    console.log(isOk);
+//    console.log(right);
+    if(isOk){
+      right = mid;
+//      console.log("うおお");
+    }else{
+      left = mid + 1;
+    }
+  }
+
+//  console.log(left);
+  console.log(right);
+
+//  console.log(S);
+  tr = document.createElement('tr');
+  tr.textContent = "周期が始まるまでの項数: " + (right);
+  table.appendChild(tr);
 }
 
 function add(index, num) {
