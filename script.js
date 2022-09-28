@@ -102,10 +102,6 @@ function calcPeriod() {
       old = n;
       n *= 2;
     }
-
-    if(index > 1000000){
-      break;
-    }
     if(finish){
       break;
     }
