@@ -1,4 +1,4 @@
-const button = document.querySelector('input[type=button]');
+const button = document.querySelector('#start');
 const period_button = document.querySelector('#period_button');
 const input = document.querySelector('input[type=text]');
 const input_length = document.querySelector('#getLength');
