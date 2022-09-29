@@ -1,5 +1,6 @@
 const button = document.querySelector('#start');
 const period_button = document.querySelector('#period_button');
+const only_period_button = document.querySelector('#only_period_button');
 const input = document.querySelector('input[type=text]');
 const input_length = document.querySelector('#getLength');
 const result_table = document.querySelector('#result_table');
@@ -7,6 +8,7 @@ const paragraph = document.querySelector('p');
 
 button.addEventListener('click', updateButton);
 period_button.addEventListener('click', preCalcPeriod);
+only_period_button.addEventListener('click', calcOnlyPeriod);
 
 function updateButton() {
   console.log(input.value);
@@ -25,16 +27,13 @@ function updateButton() {
     let exist = [];
     for(let j = 0; j < G.length; j++){
       let next = i - G[j];
-//      console.log(next);
       if(next >= 0){
         exist.push(S[next]);
       }
     }
     exist.sort((a, b) => a - b);
-//    console.log(exist);
     let min = 0;
     for(let j = 0; j < G.length; j++){
-//      console.log("min:" + min + ", ex:"+exist[j]);
       if(min == exist[j]){
         min++;
       }else if(min != exist[j] + 1){
@@ -42,7 +41,6 @@ function updateButton() {
       }
     }
     S[i] = min;
-//    console.log(min);
     add(i, min);
   }
 }
@@ -194,6 +192,97 @@ function calcPeriod() {
   addToTable(result_table, ["pre-period", pre_period]);
   addToTable(result_table, ["bit-period", bin_period]);
   addToTable(result_table, ["pre-bit-period", pre_bin_period]);
+}
+
+function calcOnlyPeriod() {
+  console.log(input.value);
+  while(result_table.firstChild) {
+      result_table.removeChild(result_table.firstChild);
+  }
+  let G = input.value.split(',').map(Number);
+  let S_max = G[G.length-1];
+  let S = [];
+  let check_ary = []
+  let old = 1024;
+  let n = 2048;
+  while(old < S_max){
+    old = n;
+    n *= 2;
+  }
+  for(let i = 0; i < G[0]; i++){
+    S[i] = 0;
+  }
+  let index = G[0];
+  let mod_index = G[0];
+  let finish = false;
+  let bin_finish = false;
+
+  let period = 1;
+  let bin_period;
+  let max_start_period = 1;
+
+  while(true){
+    let exist = [];
+    for(let j = 0; j < G.length; j++){
+      let next = (S_max + mod_index - G[j]) % S_max;
+//      console.log(next);
+      if(next >= 0){
+        exist.push(S[next]);
+      }
+    }
+    exist.sort((a, b) => a - b);
+//    console.log(exist);
+    let min = 0;
+    for(let j = 0; j < G.length; j++){
+//      console.log("min:" + min + ", ex:"+exist[j]);
+      if(min == exist[j]){
+        min++;
+      }else if(min != exist[j] + 1){
+        break;
+      }
+    }
+    S[mod_index] = min;
+//    console.log(min);
+//    add(index, min);
+
+
+//    add(index, min);
+
+    {
+      isOk = true;
+      // console.log(check_ary);
+      for(let i = 0; i < S_max; i++){
+        // console.log(S[(index - S_max + i)%S_max]);
+        if(check_ary[i] != S[(index + 1 + i)%S_max]){
+          isOk = false;
+          break;
+        }
+      }
+      if(isOk){
+        period = index - S_max - old/2;
+        finish = true;
+        break;
+      }
+    }
+
+    if(index == old + S_max){
+      for(let i = 0; i < S_max; i++){
+        check_ary[i] = S[(old + i + 1) % S_max];
+      }
+      // console.log(index);
+      // console.log(check_ary);
+      old = n;
+      n *= 2;
+    }
+
+    if(finish){
+      break;
+    }
+    index++;
+    mod_index++;
+    mod_index %= G[G.length-1];
+  }
+  addToTable(result_table, ["period", period]);
 }
 
 function add(index, num) {
