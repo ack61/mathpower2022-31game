@@ -243,11 +243,15 @@ function calcOnlyPeriod() {
 
     {
       isOk = true;
+      mod_i = (index + 1) % S_max;
       for(let i = 0; i < S_max; i++){
-        if(check_ary[i] != S[(index + 1 + i)%S_max]){
+//        if(check_ary[i] != S[(index + 1 + i)%S_max]){
+        if(check_ary[i] != S[mod_i]){
           isOk = false;
           break;
         }
+        mod_i++;
+        mod_i = mod_i < S_max ? mod_i : mod_i - S_max;
       }
       if(isOk){
         period = index - S_max - old/2;
