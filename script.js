@@ -65,8 +65,10 @@ function calcPeriod() {
   }
   let index = G[0];
   let finish = false;
+  let bin_finish = false;
 
   let period = 1;
+  let bin_period;
   let max_start_period = 1;
 
   while(true){
@@ -94,6 +96,26 @@ function calcPeriod() {
 //    add(index, min);
 
     if(index == n){
+      if(!bin_finish){
+        for(let i = old + 1; i < n - G[G.length-1]; i++){
+          let ok = true;
+          for(let j = 0; j < G[G.length-1]; j++){
+            if(!(S[old+j] == 0 && S[i+j] == 0 || S[old+j] != 0 && S[i+j] != 0)){
+              ok = false;
+              break;
+            }
+          }
+          if(ok){
+    //          console.log("@" + (i - old));          
+            bin_finish = true;
+            tr = document.createElement('tr');
+            bin_period = i - old;
+            tr.textContent = "01での周期: " + (i - old);
+            table.appendChild(tr);
+            break;
+          }
+        }
+      }
       for(let i = old + 1; i < n - G[G.length-1]; i++){
         let ok = true;
         for(let j = 0; j < G[G.length-1]; j++){
@@ -122,37 +144,58 @@ function calcPeriod() {
     index++;
   }
 
-  let left = 0;
-  let right = max_start_period;
-  while(left != right){
-    let mid = Math.floor((left + right) / 2);
-    let isOk = true;
-    for(let i = 0; i < G[G.length-1]; i++){
-//      console.log(S[mid+i]);
-//      console.log(S[period+mid+i]);
-//      console.log(S[mid+i] == S[period+mid+i]);
-      if(S[mid+i] != S[period+mid+i]){
-        isOk = false;
-        break;
+  {
+    let left = 0;
+    let right = max_start_period;
+    while(left != right){
+      let mid = Math.floor((left + right) / 2);
+      let isOk = true;
+      for(let i = 0; i < G[G.length-1]; i++){
+        if((S[mid+i] == 0) != (S[period+mid+i] == 0)){
+          isOk = false;
+          break;
+        }
+      }
+      if(isOk){
+        right = mid;
+      }else{
+        left = mid + 1;
       }
     }
-//    console.log(isOk);
-//    console.log(right);
-    if(isOk){
-      right = mid;
-//      console.log("うおお");
-    }else{
-      left = mid + 1;
-    }
+    console.log(right);
+    tr = document.createElement('tr');
+    tr.textContent = "01での周期が始まるまでの項数: " + (right);
+    table.appendChild(tr);
   }
-
-//  console.log(left);
-  console.log(right);
-
-//  console.log(S);
-  tr = document.createElement('tr');
-  tr.textContent = "周期が始まるまでの項数: " + (right);
-  table.appendChild(tr);
+  {
+    let left = 0;
+    let right = max_start_period;
+    while(left != right){
+      let mid = Math.floor((left + right) / 2);
+      let isOk = true;
+      for(let i = 0; i < G[G.length-1]; i++){
+  //      console.log(S[mid+i]);
+  //      console.log(S[period+mid+i]);
+  //      console.log(S[mid+i] == S[period+mid+i]);
+        if(S[mid+i] != S[period+mid+i]){
+          isOk = false;
+          break;
+        }
+      }
+  //    console.log(isOk);
+  //    console.log(right);
+      if(isOk){
+        right = mid;
+  //      console.log("うおお");
+      }else{
+        left = mid + 1;
+      }
+    }
+    console.log(right);
+    tr = document.createElement('tr');
+    tr.textContent = "周期が始まるまでの項数: " + (right);
+    table.appendChild(tr);
+  }
 }
 
 function add(index, num) {
