@@ -22,11 +22,27 @@
     <!-- Main menu -->
     <main>
       <p>カンマ区切り、空白無しで取れる数の集合の中身を入力</p>
-      <input type="text" id="in" size="50">
-      <input type="button" id="period_button" name="name" size="50" value="周期を計算する">
-      <p>計算する項数</p>
-      <input type="text" id="getLength" size="10" value="200">
-      <input type="button" id="start" name="name" size="50" value="計算する">
+      <div class="option">
+        <div>S={</div>
+        <input type="text" id="in" size="50">
+        <div>}</div>
+      </div>
+
+      <ul>
+        <li>
+          <div class="option">
+            <input type="button" id="period_button" name="name" size="50" value=" 周期を計算する">
+          </div>
+        </li>
+        <li>
+          <div class="option">
+            <input type="text" id="getLength" size="4" value="200">
+            <div>　項　</div>
+            <input type="button" id="start" name="name" size="50" value="ビジュアライズする">
+          </div>
+        </li>
+      </ul>
+
       <table id="result_table">
       </table>
     </main>
