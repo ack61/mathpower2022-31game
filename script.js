@@ -2,7 +2,7 @@ const button = document.querySelector('#start');
 const period_button = document.querySelector('#period_button');
 const input = document.querySelector('input[type=text]');
 const input_length = document.querySelector('#getLength');
-const table = document.querySelector('table');
+const result_table = document.querySelector('#result_table');
 const paragraph = document.querySelector('p');
 
 button.addEventListener('click', updateButton);
@@ -10,8 +10,8 @@ period_button.addEventListener('click', preCalcPeriod);
 
 function updateButton() {
   console.log(input.value);
-  while(table.firstChild) {
-      table.removeChild(table.firstChild);
+  while(result_table.firstChild) {
+      result_table.removeChild(result_table.firstChild);
   }
   let G = input.value.split(',').map(Number);
   let S = [];
@@ -53,8 +53,8 @@ function preCalcPeriod() {
 
 function calcPeriod() {
   console.log(input.value);
-  while(table.firstChild) {
-      table.removeChild(table.firstChild);
+  while(result_table.firstChild) {
+      result_table.removeChild(result_table.firstChild);
   }
   let G = input.value.split(',').map(Number);
   let S = [];
@@ -68,7 +68,9 @@ function calcPeriod() {
   let bin_finish = false;
 
   let period = 1;
+  let pre_period = 1;
   let bin_period;
+  let pre_bin_period = 1;
   let max_start_period = 1;
 
   while(true){
@@ -106,12 +108,8 @@ function calcPeriod() {
             }
           }
           if(ok){
-    //          console.log("@" + (i - old));          
             bin_finish = true;
-            tr = document.createElement('tr');
             bin_period = i - old;
-            tr.textContent = "01での周期: " + (i - old);
-            table.appendChild(tr);
             break;
           }
         }
@@ -127,11 +125,11 @@ function calcPeriod() {
         if(ok){
 //          console.log("@" + (i - old));          
           finish = true;
-          tr = document.createElement('tr');
+          // tr = document.createElement('tr');
           max_start_period = old;
           period = i - old;
-          tr.textContent = "周期: " + (i - old);
-          table.appendChild(tr);
+          // tr.textContent = "周期: " + (i - old);
+          // result_table.appendChild(tr);
           break;
         }
       }
@@ -163,9 +161,7 @@ function calcPeriod() {
       }
     }
     console.log(right);
-    tr = document.createElement('tr');
-    tr.textContent = "01での周期が始まるまでの項数: " + (right);
-    table.appendChild(tr);
+    pre_bin_period = right;
   }
   {
     let left = 0;
@@ -192,10 +188,12 @@ function calcPeriod() {
       }
     }
     console.log(right);
-    tr = document.createElement('tr');
-    tr.textContent = "周期が始まるまでの項数: " + (right);
-    table.appendChild(tr);
+    pre_period = right;
   }
+  addToTable(result_table, ["period", period]);
+  addToTable(result_table, ["pre-period", pre_period]);
+  addToTable(result_table, ["bit-period", bin_period]);
+  addToTable(result_table, ["pre-bit-period", pre_bin_period]);
 }
 
 function add(index, num) {
@@ -210,5 +208,15 @@ function add(index, num) {
   tr.appendChild(l2);
   tr.appendChild(l3);
 
+  result_table.appendChild(tr);
+}
+
+function addToTable(table, ary){
+  let tr = document.createElement('tr');
+  for(let i = 0; i < ary.length; i++){
+    let td = document.createElement('td');
+    td.textContent = ary[i];
+    tr.appendChild(td);
+  }
   table.appendChild(tr);
 }
