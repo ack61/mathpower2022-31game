@@ -15,15 +15,20 @@ function updateButton() {
   }
   let G = input.value.split(',').map(Number);
   let S = [];
-  S[0] = 0;
-  add(0, 0);
+  for(let i = 0; i < G[0]; i++){
+    S[i] = 0;
+    add(i, 0);
+  }
+  let index = G[0];
 
   for(let i = 1; i < input_length.value; i++){
     let exist = [];
     for(let j = 0; j < G.length; j++){
-      let next = Math.max(0, i - G[j]);
+      let next = i - G[j];
 //      console.log(next);
-      exist.push(S[next]);
+      if(next >= 0){
+        exist.push(S[next]);
+      }
     }
     exist.sort((a, b) => a - b);
 //    console.log(exist);
@@ -53,10 +58,12 @@ function calcPeriod() {
   }
   let G = input.value.split(',').map(Number);
   let S = [];
-  let old = 128;
-  let n = 256;
-  S[0] = 0;
-  let index = 1;
+  let old = 1024;
+  let n = 2048;
+  for(let i = 0; i < G[0]; i++){
+    S[i] = 0;
+  }
+  let index = G[0];
   let finish = false;
 
   let period = 1;
@@ -65,9 +72,11 @@ function calcPeriod() {
   while(true){
     let exist = [];
     for(let j = 0; j < G.length; j++){
-      let next = Math.max(0, index - G[j]);
+      let next = index - G[j];
 //      console.log(next);
-      exist.push(S[next]);
+      if(next >= 0){
+        exist.push(S[next]);
+      }
     }
     exist.sort((a, b) => a - b);
 //    console.log(exist);
