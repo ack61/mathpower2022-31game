@@ -221,20 +221,18 @@ function calcOnlyPeriod() {
   let bin_period;
   let max_start_period = 1;
 
+  let exist = [];
+
   while(true){
-    let exist = [];
-    for(let j = 0; j < G.length; j++){
-      let next = (S_max + mod_index - G[j]) % S_max;
-//      console.log(next);
-      if(next >= 0){
-        exist.push(S[next]);
-      }
+    for(let i = 0; i < G.length; i++){
+      let next = (S_max + mod_index - G[i]) % S_max;
+      exist[i] = next >= 0 ? S[next] : -1;
     }
+
     exist.sort((a, b) => a - b);
-//    console.log(exist);
+
     let min = 0;
     for(let j = 0; j < G.length; j++){
-//      console.log("min:" + min + ", ex:"+exist[j]);
       if(min == exist[j]){
         min++;
       }else if(min != exist[j] + 1){
@@ -242,17 +240,10 @@ function calcOnlyPeriod() {
       }
     }
     S[mod_index] = min;
-//    console.log(min);
-//    add(index, min);
-
-
-//    add(index, min);
 
     {
       isOk = true;
-      // console.log(check_ary);
       for(let i = 0; i < S_max; i++){
-        // console.log(S[(index - S_max + i)%S_max]);
         if(check_ary[i] != S[(index + 1 + i)%S_max]){
           isOk = false;
           break;
@@ -269,8 +260,6 @@ function calcOnlyPeriod() {
       for(let i = 0; i < S_max; i++){
         check_ary[i] = S[(old + i + 1) % S_max];
       }
-      // console.log(index);
-      // console.log(check_ary);
       old = n;
       n *= 2;
     }
@@ -280,7 +269,7 @@ function calcOnlyPeriod() {
     }
     index++;
     mod_index++;
-    mod_index %= G[G.length-1];
+    mod_index %= S_max;
   }
   addToTable(result_table, ["period", period]);
 }
