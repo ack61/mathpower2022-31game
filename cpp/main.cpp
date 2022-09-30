@@ -13,7 +13,6 @@ const int MAX_RANGE = (1 << max_log2);
 const int RANGE_MASK = MAX_RANGE - 1;
 
 int main() {
-  cout << max_log2 << endl;
   long long old = MAX_RANGE;
   long long n = old * 2;
   array<int, MAX_RANGE> G;
