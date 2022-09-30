@@ -7,7 +7,6 @@ using namespace std;
 const array<int, 3> S = {5000, 10001, 15001}; //昇順で書く
 const int S_length = S.size();
 const int S_max = S[S_length - 1];
-
 const int max_log2 = ceil(log2(S_max));
 const int MAX_RANGE = (1 << max_log2);
 const int RANGE_MASK = MAX_RANGE - 1;
@@ -33,7 +32,7 @@ int main() {
   bool finish = false;
   bool bin_finish = false;
 
-  int period = -1;
+  long long period = -1;
 
   array<int, S_length> exist;
   for(int i = 0; i < S_length; i++){
@@ -42,7 +41,7 @@ int main() {
 
   while(true){
     for(int i = 0; i < S_length; i++){
-      int alnext = index - S[i];
+      long long alnext = index - S[i];
       int next = (MAX_RANGE + mod_index - S[i]) & RANGE_MASK;
       exist[i] = alnext >= 0 ? G[next] : -1;
     }
@@ -62,11 +61,11 @@ int main() {
         break;
       }
     }
-    G[mod_index] = min;
+    G[mod_index] = min > 0 ? 1 : 0;
 
     {
       bool isOk = true;
-      int mod_i = (MAX_RANGE + index - S_max) & RANGE_MASK;
+      int mod_i = (MAX_RANGE + index % MAX_RANGE - S_max) & RANGE_MASK;
       for(int i = 0; i < S_max; i++){
         if(check_ary[i] != G[mod_i]){
           isOk = false;
@@ -76,6 +75,9 @@ int main() {
         mod_i &= RANGE_MASK;
       }
       if(isOk){
+//        cout << ((MAX_RANGE + index % MAX_RANGE - S_max) & RANGE_MASK) << endl;
+//        cout << mod_i << endl;
+//        cout << index << ", " << S_max << ", " << old/2 << endl;
         period = index - S_max - old/2;
         finish = true;
         break;
@@ -84,10 +86,16 @@ int main() {
 
     if(index == old + S_max){
       for(int i = 0; i < S_max; i++){
-        check_ary[i] = G[(old + i) & RANGE_MASK];
+        check_ary[i] = G[(old % MAX_RANGE + i) & RANGE_MASK];
       }
+//      cout << index << endl;
       old = n;
-      n *= 2;
+      n *= 2ull;
+    }
+
+    if(index % 100000000L == 0){
+      cout << "progress : " << index << endl;
+//      cout << ((MAX_RANGE + index - S_max) & RANGE_MASK) << endl;
     }
 
     if(finish){
@@ -97,5 +105,5 @@ int main() {
     mod_index++;
     mod_index &= RANGE_MASK;
   }
-  cout << period << endl;
+  cout << "#" << period << endl;
 }
